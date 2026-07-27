@@ -33,12 +33,12 @@ use core\hook\output\before_standard_top_of_body_html_generation;
  */
 class hooks {
     /**
-     * Injeta o JS na página de visualização do aluno usando os novos PSR-14 hooks.
+     * Injects the JS into the student's view page using PSR-14 hooks.
      */
-    public static function before_standard_top_of_body_html_generation(\core\hook\output\before_standard_top_of_body_html_generation $hook) {
+    public static function before_standard_top_of_body_html_generation(before_standard_top_of_body_html_generation $hook) {
         global $PAGE, $DB;
 
-        // 1. O CHEFE (Página do Curso)
+        // 1. The Parent (Course Page)
         if ($PAGE->pagetype === 'mod-h5pactivity-view' && !empty($PAGE->cm->id)) {
             if (helper::is_interactive_book_cm((int)$PAGE->cm->id)) {
                 if ($setting = $DB->get_record('local_h5pchapter_settings', ['cmid' => $PAGE->cm->id])) {
@@ -47,15 +47,14 @@ class hooks {
                             'chapter_target' => $setting->chapter_target,
                             'block_navigation' => (bool)$setting->block_navigation,
                         ];
-                        // Injeta o script no modo "Chefe"
+                        // Inject script in parent mode.
                         $PAGE->requires->js_call_amd('local_h5pchapter/deeplink', 'initParent', [$params]);
                     }
                 }
             }
-        }
-        // 2. O OPERÁRIO (Dentro do Iframe)
-        else if ($PAGE->pagelayout === 'embedded') {
-            // Injeta o script no modo "Operário" (sem parâmetros, ele vai pedir pro chefe)
+        } else if ($PAGE->pagelayout === 'embedded') {
+            // 2. The Worker (Inside the Iframe).
+            // Inject script in iframe mode (without params, it will ask the parent).
             $PAGE->requires->js_call_amd('local_h5pchapter/deeplink', 'initIframe', []);
         }
     }

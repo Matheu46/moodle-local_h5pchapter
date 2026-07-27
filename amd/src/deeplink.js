@@ -5,12 +5,10 @@
  */
 define(['jquery'], function ($) {
     return {
-        // --- CÓDIGO DA PÁGINA PAI (CAMADA 0) ---
+        // Parent window code (Layer 0)
         initParent: function (params) {
-
             window.addEventListener('message', function(event) {
                 if (event.data && event.data.app === 'h5pchapter' && event.data.action === 'ready') {
-
                     event.source.postMessage({
                         app: 'h5pchapter',
                         action: 'execute',
@@ -21,9 +19,8 @@ define(['jquery'], function ($) {
             });
         },
 
-// --- CÓDIGO DENTRO DO EMBED.PHP (CAMADA 1) ---
+        // Code running inside the embed iframe (Layer 1)
         initIframe: function () {
-
             window.parent.postMessage({
                 app: 'h5pchapter',
                 action: 'ready'
@@ -31,7 +28,6 @@ define(['jquery'], function ($) {
 
             window.addEventListener('message', function(event) {
                 if (event.data && event.data.app === 'h5pchapter' && event.data.action === 'execute') {
-
                     var targetChaptersStr = event.data.target ? String(event.data.target) : '';
                     var targetChapters = targetChaptersStr.split(',').map(function(item) {
                         return parseInt(item.trim(), 10);
@@ -48,7 +44,7 @@ define(['jquery'], function ($) {
                             try {
                                 targetDoc = $innerIframe[0].contentDocument || $innerIframe[0].contentWindow.document;
                             } catch (e) {
-
+                                // Ignore cross-origin errors if they occur
                             }
                         }
 
@@ -58,15 +54,13 @@ define(['jquery'], function ($) {
                             var $chapters = $(targetDoc).find('.h5p-interactive-book-navigation-chapter');
 
                             if ($chapters.length > 0) {
-
-                                // 1. O SALTO (DEEPLINK COM CLIQUE NATIVO)
+                                // 1. Simulate native click for deep linking
                                 if (targetChapters.length > 0) {
                                     var firstTargetIndex = targetChapters[0] - 1;
 
                                     if ($chapters.length > firstTargetIndex) {
                                         var $targetLi = $chapters.eq(firstTargetIndex);
                                         var $clickable = $targetLi.find('[role="button"], a, button').first();
-
                                         var domElement = $clickable.length > 0 ? $clickable[0] : $targetLi[0];
 
                                         var clickEvent = new MouseEvent('click', {
@@ -78,7 +72,7 @@ define(['jquery'], function ($) {
                                     }
                                 }
 
-                                // 2. A GUILHOTINA (BLOQUEIO VISUAL)
+                                // 2. Visual blocking of navigation elements
                                 if (blockNavigation) {
                                     var cssRule = '<style>' +
                                     '.h5p-interactive-book-status-main { display: flex !important; ' +
@@ -92,7 +86,7 @@ define(['jquery'], function ($) {
                                     '.h5p-interactive-book-status-arrow { display: none !important; }';
 
                                     if (targetChapters.length <= 1) {
-                                        // Apenas 1 capítulo liberado: esconde o menu lateral totalmente
+                                        // Only 1 chapter allowed: hide side menu completely
                                         cssRule += '.h5p-interactive-book-navigation { display: none !important; }' +
                                                    '.h5p-interactive-book-status-menu { display: none !important; }' +
                                                    '.h5p-interactive-book-status-side { display: none !important; }' +
@@ -100,7 +94,7 @@ define(['jquery'], function ($) {
                                                    '.h5p-interactive-book-status-main { width: 100% !important; }' +
                                                    '.h5p-interactive-book-main { width: 100% !important; }';
                                     } else {
-                                        // Múltiplos capítulos liberados: esconde apenas os itens não permitidos no menu
+                                        // Multiple chapters allowed: hide unlisted chapters only
                                         cssRule += '.h5p-interactive-book-navigation-chapter.h5pchapter-locked ' +
                                                    '{ display: none !important; }';
                                     }
@@ -108,7 +102,7 @@ define(['jquery'], function ($) {
                                     cssRule += '</style>';
                                     $(targetDoc).find('head').append(cssRule);
 
-                                    // Se tem múltiplos capítulos, marcamos os não listados como locked
+                                    // Mark unlisted chapters for hiding
                                     if (targetChapters.length > 1) {
                                         $chapters.each(function(index, elem) {
                                             if (targetChapters.indexOf(index + 1) === -1) {
@@ -118,7 +112,7 @@ define(['jquery'], function ($) {
                                     }
                                 }
 
-                                return; // Missão cumprida, encerra o loop!
+                                return;
                             }
                         }
 

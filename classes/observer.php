@@ -16,8 +16,6 @@
 
 namespace local_h5pchapter;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Event observer for local_h5pchapter.
  *

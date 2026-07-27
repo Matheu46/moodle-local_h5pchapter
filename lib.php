@@ -22,24 +22,27 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Adds custom settings to the H5P activity settings form.
+ *
+ * @param object $formwrapper The form wrapper object.
+ * @param \MoodleQuickForm $mform The form object.
+ */
 function local_h5pchapter_coursemodule_standard_elements($formwrapper, $mform) {
-    // Pega as informações da atividade que o professor está editando/criando
     $current = $formwrapper->get_current();
 
-    // Verifica se é H5P e se é da biblioteca Interactive Book
+    // Check if it is an H5P Interactive Book activity.
     if (\local_h5pchapter\helper::is_interactive_book_form($current)) {
-        $mform->addElement('header', 'local_h5pchapter_header', 'Controle de Capítulos H5P (Plugin Local)');
+        $mform->addElement('header', 'local_h5pchapter_header', get_string('h5pchapter_control', 'local_h5pchapter'));
 
-        $mform->addElement('text', 'chapter_target', 'ID ou Nome do Capítulo Alvo', ['maxlength' => 255]);
+        $mform->addElement('text', 'chapter_target', get_string('chapter_target', 'local_h5pchapter'), ['maxlength' => 255]);
         $mform->setType('chapter_target', PARAM_TEXT);
 
-        $mform->addElement('advcheckbox', 'block_navigation', 'Bloquear navegação para outros capítulos');
+        $mform->addElement('advcheckbox', 'block_navigation', get_string('block_navigation', 'local_h5pchapter'));
         $mform->setType('block_navigation', PARAM_BOOL);
         $mform->setDefault('block_navigation', 0);
 
-        // Se já existe um ID de módulo, tenta carregar as configurações salvas
+        // Load existing settings if the module ID exists.
         if (!empty($current->coursemodule)) {
             global $DB;
             if ($setting = $DB->get_record('local_h5pchapter_settings', ['cmid' => $current->coursemodule])) {
@@ -51,26 +54,30 @@ function local_h5pchapter_coursemodule_standard_elements($formwrapper, $mform) {
 }
 
 /**
- * 2. SALVA OS DADOS NO BANCO APÓS O PROFESSOR SALVAR O FORMULÁRIO
+ * Saves the custom settings when the H5P activity form is submitted.
+ *
+ * @param \stdClass $data The submitted form data.
+ * @param \stdClass $course The course object.
+ * @return \stdClass The modified form data.
  */
 function local_h5pchapter_coursemodule_edit_post_actions($data, $course) {
     global $DB;
 
-    // Garante que só vamos interceptar o salvamento de atividades H5P
+    // Only process H5P activities.
     if (empty($data->modulename) || $data->modulename !== 'h5pactivity' || empty($data->coursemodule)) {
         return $data;
     }
 
     $cmid = (int)$data->coursemodule;
 
-    // Verifica se a atividade é Interactive Book
+    // Verify if the activity is an Interactive Book.
     if (!\local_h5pchapter\helper::is_interactive_book_form($data) && !\local_h5pchapter\helper::is_interactive_book_cm($cmid)) {
-        // Se não for Interactive Book, remove configurações que porventura existam
+        // Remove settings if it is no longer an Interactive Book.
         $DB->delete_records('local_h5pchapter_settings', ['cmid' => $cmid]);
         return $data;
     }
 
-    $record = new stdClass();
+    $record = new \stdClass();
     $record->cmid = $cmid;
     $record->chapter_target = $data->chapter_target ?? '';
     $record->block_navigation = !empty($data->block_navigation) ? 1 : 0;

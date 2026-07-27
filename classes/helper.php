@@ -16,8 +16,6 @@
 
 namespace local_h5pchapter;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Helper class for local_h5pchapter.
  *
@@ -68,6 +66,7 @@ class helper {
                 }
             } catch (\Exception $e) {
                 // Ignore context/permission exceptions.
+                unset($e);
             }
         }
 
@@ -98,6 +97,7 @@ class helper {
             }
         } catch (\Exception $e) {
             // Module context not found.
+            unset($e);
         }
 
         return false;
@@ -125,6 +125,7 @@ class helper {
             }
         } catch (\Exception $e) {
             // DB query fail or tables missing.
+            unset($e);
         }
 
         // If not found in DB, inspect h5p.json inside the zip.
@@ -175,7 +176,7 @@ class helper {
             return false;
         }
 
-        // Check mainLibrary
+        // Check mainLibrary.
         if (!empty($data['mainLibrary'])) {
             $mainlib = $data['mainLibrary'];
             $name = is_array($mainlib) ? ($mainlib['machineName'] ?? $mainlib['name'] ?? '') : (string)$mainlib;
@@ -184,7 +185,7 @@ class helper {
             }
         }
 
-        // Check preloadedDependencies as fallback
+        // Check preloadedDependencies as fallback.
         if (!empty($data['preloadedDependencies']) && is_array($data['preloadedDependencies'])) {
             foreach ($data['preloadedDependencies'] as $dep) {
                 $name = is_array($dep) ? ($dep['machineName'] ?? $dep['name'] ?? '') : (string)$dep;
