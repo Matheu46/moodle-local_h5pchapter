@@ -32,7 +32,12 @@ define(['jquery'], function ($) {
             window.addEventListener('message', function(event) {
                 if (event.data && event.data.app === 'h5pchapter' && event.data.action === 'execute') {
 
-                    var targetChapterNum = parseInt(event.data.target, 10);
+                    var targetChaptersStr = event.data.target ? String(event.data.target) : '';
+                    var targetChapters = targetChaptersStr.split(',').map(function(item) {
+                        return parseInt(item.trim(), 10);
+                    }).filter(function(item) {
+                        return !isNaN(item) && item > 0;
+                    });
                     var blockNavigation = event.data.block;
 
                     var checkDOM = function() {
@@ -55,24 +60,20 @@ define(['jquery'], function ($) {
                             if ($chapters.length > 0) {
 
                                 // 1. O SALTO (DEEPLINK COM CLIQUE NATIVO)
-                                if (!isNaN(targetChapterNum) && targetChapterNum > 0) {
-                                    var targetIndex = targetChapterNum - 1;
+                                if (targetChapters.length > 0) {
+                                    var firstTargetIndex = targetChapters[0] - 1;
 
-                                    if ($chapters.length > targetIndex) {
-                                        var $targetLi = $chapters.eq(targetIndex);
+                                    if ($chapters.length > firstTargetIndex) {
+                                        var $targetLi = $chapters.eq(firstTargetIndex);
                                         var $clickable = $targetLi.find('[role="button"], a, button').first();
 
-                                        // Pega o elemento DOM cru (sem o wrapper do jQuery)
                                         var domElement = $clickable.length > 0 ? $clickable[0] : $targetLi[0];
 
-                                        // Cria um evento de mouse nativo simulando um clique humano real
                                         var clickEvent = new MouseEvent('click', {
                                             view: targetDoc.defaultView,
                                             bubbles: true,
                                             cancelable: true
                                         });
-
-                                        // Dispara o evento
                                         domElement.dispatchEvent(clickEvent);
                                     }
                                 }
@@ -81,20 +82,40 @@ define(['jquery'], function ($) {
                                 if (blockNavigation) {
                                     var cssRule = '<style>' +
                                     '.h5p-interactive-book-status-main { display: flex !important; ' +
-                                    'width: 100% !important; justify-content: space-between; }' +
-                                    '.h5p-interactive-book-status-header { display: flex !important; }' +
-                                    '.h5p-interactive-book-navigation { display: none !important; }' +
+                                    'justify-content: space-between; }' +
                                     '.h5p-theme-button { display: none !important; }' +
                                     '.h5p-interactive-book-status-chapter { max-width: none !important; }' +
-                                    '.h5p-interactive-book-status-side { display: none !important; }' +
-                                    '.h5p-interactive-book-main { width: 100% !important; }' +
                                     '.h5p-interactive-book-cover { display: none !important; }' +
-                                    '.h5p-interactive-book-status-menu { display: none !important; }' +
                                     '.h5p-interactive-book-status-progress-wrapper ' +
                                     '{ display: none !important; }' +
                                     '.h5p-interactive-book-status-footer { display: none !important; }' +
-                                    '</style>';
+                                    '.h5p-interactive-book-status-arrow { display: none !important; }';
+
+                                    if (targetChapters.length <= 1) {
+                                        // Apenas 1 capítulo liberado: esconde o menu lateral totalmente
+                                        cssRule += '.h5p-interactive-book-navigation { display: none !important; }' +
+                                                   '.h5p-interactive-book-status-menu { display: none !important; }' +
+                                                   '.h5p-interactive-book-status-side { display: none !important; }' +
+                                                   '.h5p-interactive-book-status-header { display: flex !important; }' +
+                                                   '.h5p-interactive-book-status-main { width: 100% !important; }' +
+                                                   '.h5p-interactive-book-main { width: 100% !important; }';
+                                    } else {
+                                        // Múltiplos capítulos liberados: esconde apenas os itens não permitidos no menu
+                                        cssRule += '.h5p-interactive-book-navigation-chapter.h5pchapter-locked ' +
+                                                   '{ display: none !important; }';
+                                    }
+
+                                    cssRule += '</style>';
                                     $(targetDoc).find('head').append(cssRule);
+
+                                    // Se tem múltiplos capítulos, marcamos os não listados como locked
+                                    if (targetChapters.length > 1) {
+                                        $chapters.each(function(index, elem) {
+                                            if (targetChapters.indexOf(index + 1) === -1) {
+                                                $(elem).addClass('h5pchapter-locked');
+                                            }
+                                        });
+                                    }
                                 }
 
                                 return; // Missão cumprida, encerra o loop!
