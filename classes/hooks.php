@@ -44,13 +44,13 @@ class hooks {
                 if (!empty($setting->chapter_target) || !empty($setting->block_navigation)) {
                     $params = [
                         'chapter_target' => $setting->chapter_target,
-                        'block_navigation' => (bool)$setting->block_navigation
+                        'block_navigation' => (bool)$setting->block_navigation,
                     ];
                     // Injeta o script no modo "Chefe"
                     $PAGE->requires->js_call_amd('local_h5pchapter/deeplink', 'initParent', [$params]);
                 }
             }
-        } 
+        }
         // 2. O OPERÁRIO (Dentro do Iframe)
         else if ($PAGE->pagelayout === 'embedded') {
             // Injeta o script no modo "Operário" (sem parâmetros, ele vai pedir pro chefe)

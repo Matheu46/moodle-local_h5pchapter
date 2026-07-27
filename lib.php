@@ -5,6 +5,14 @@
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
  * Library functions and callbacks for local_h5pchapter.
@@ -19,10 +27,9 @@ defined('MOODLE_INTERNAL') || die();
 function local_h5pchapter_coursemodule_standard_elements($formwrapper, $mform) {
     // Pega as informações da atividade que o professor está editando/criando
     $current = $formwrapper->get_current();
-    
+
     // Verifica se é o H5P Core nativo
     if (isset($current->modulename) && $current->modulename === 'h5pactivity') {
-        
         $mform->addElement('header', 'local_h5pchapter_header', 'Controle de Capítulos H5P (Plugin Local)');
 
         $mform->addElement('text', 'chapter_target', 'ID ou Nome do Capítulo Alvo', ['maxlength' => 255]);
@@ -31,7 +38,7 @@ function local_h5pchapter_coursemodule_standard_elements($formwrapper, $mform) {
         $mform->addElement('advcheckbox', 'block_navigation', 'Bloquear navegação para outros capítulos');
         $mform->setType('block_navigation', PARAM_BOOL);
         $mform->setDefault('block_navigation', 0);
-        
+
         // Se já existe um ID de módulo, tenta carregar as configurações salvas
         if (!empty($current->coursemodule)) {
             global $DB;
