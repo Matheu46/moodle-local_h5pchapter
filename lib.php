@@ -36,9 +36,11 @@ function local_h5pchapter_coursemodule_standard_elements($formwrapper, $mform) {
         $mform->addElement('header', 'local_h5pchapter_header', get_string('h5pchapter_control', 'local_h5pchapter'));
 
         $mform->addElement('text', 'chapter_target', get_string('chapter_target', 'local_h5pchapter'), ['maxlength' => 255]);
+        $mform->addHelpButton('chapter_target', 'chapter_target', 'local_h5pchapter');
         $mform->setType('chapter_target', PARAM_TEXT);
 
         $mform->addElement('advcheckbox', 'block_navigation', get_string('block_navigation', 'local_h5pchapter'));
+        $mform->addHelpButton('block_navigation', 'block_navigation', 'local_h5pchapter');
         $mform->setType('block_navigation', PARAM_BOOL);
         $mform->setDefault('block_navigation', 0);
 
