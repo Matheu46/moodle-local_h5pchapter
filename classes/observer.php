@@ -67,11 +67,17 @@ class observer {
     protected static function save_settings($event) {
         global $DB;
 
-        $cmid = $event->objectid;
+        $cmid = (int)$event->objectid;
         $modulename = $event->other['modulename'] ?? '';
 
         // We only care about h5pactivity modules.
         if ($modulename !== 'h5pactivity') {
+            return;
+        }
+
+        // Check if the activity is Interactive Book.
+        if (!helper::is_interactive_book_cm($cmid)) {
+            $DB->delete_records('local_h5pchapter_settings', ['cmid' => $cmid]);
             return;
         }
 

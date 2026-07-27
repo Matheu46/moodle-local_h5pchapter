@@ -28,8 +28,8 @@ function local_h5pchapter_coursemodule_standard_elements($formwrapper, $mform) {
     // Pega as informações da atividade que o professor está editando/criando
     $current = $formwrapper->get_current();
 
-    // Verifica se é o H5P Core nativo
-    if (isset($current->modulename) && $current->modulename === 'h5pactivity') {
+    // Verifica se é H5P e se é da biblioteca Interactive Book
+    if (\local_h5pchapter\helper::is_interactive_book_form($current)) {
         $mform->addElement('header', 'local_h5pchapter_header', 'Controle de Capítulos H5P (Plugin Local)');
 
         $mform->addElement('text', 'chapter_target', 'ID ou Nome do Capítulo Alvo', ['maxlength' => 255]);
@@ -57,12 +57,21 @@ function local_h5pchapter_coursemodule_edit_post_actions($data, $course) {
     global $DB;
 
     // Garante que só vamos interceptar o salvamento de atividades H5P
-    if ($data->modulename !== 'h5pactivity' || empty($data->coursemodule)) {
+    if (empty($data->modulename) || $data->modulename !== 'h5pactivity' || empty($data->coursemodule)) {
+        return $data;
+    }
+
+    $cmid = (int)$data->coursemodule;
+
+    // Verifica se a atividade é Interactive Book
+    if (!\local_h5pchapter\helper::is_interactive_book_form($data) && !\local_h5pchapter\helper::is_interactive_book_cm($cmid)) {
+        // Se não for Interactive Book, remove configurações que porventura existam
+        $DB->delete_records('local_h5pchapter_settings', ['cmid' => $cmid]);
         return $data;
     }
 
     $record = new stdClass();
-    $record->cmid = $data->coursemodule;
+    $record->cmid = $cmid;
     $record->chapter_target = $data->chapter_target ?? '';
     $record->block_navigation = !empty($data->block_navigation) ? 1 : 0;
     $record->timemodified = time();

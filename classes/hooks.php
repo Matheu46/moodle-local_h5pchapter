@@ -40,14 +40,16 @@ class hooks {
 
         // 1. O CHEFE (Página do Curso)
         if ($PAGE->pagetype === 'mod-h5pactivity-view' && !empty($PAGE->cm->id)) {
-            if ($setting = $DB->get_record('local_h5pchapter_settings', ['cmid' => $PAGE->cm->id])) {
-                if (!empty($setting->chapter_target) || !empty($setting->block_navigation)) {
-                    $params = [
-                        'chapter_target' => $setting->chapter_target,
-                        'block_navigation' => (bool)$setting->block_navigation,
-                    ];
-                    // Injeta o script no modo "Chefe"
-                    $PAGE->requires->js_call_amd('local_h5pchapter/deeplink', 'initParent', [$params]);
+            if (helper::is_interactive_book_cm((int)$PAGE->cm->id)) {
+                if ($setting = $DB->get_record('local_h5pchapter_settings', ['cmid' => $PAGE->cm->id])) {
+                    if (!empty($setting->chapter_target) || !empty($setting->block_navigation)) {
+                        $params = [
+                            'chapter_target' => $setting->chapter_target,
+                            'block_navigation' => (bool)$setting->block_navigation,
+                        ];
+                        // Injeta o script no modo "Chefe"
+                        $PAGE->requires->js_call_amd('local_h5pchapter/deeplink', 'initParent', [$params]);
+                    }
                 }
             }
         }
