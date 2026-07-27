@@ -34,6 +34,8 @@ use core\hook\output\before_standard_top_of_body_html_generation;
 class hooks {
     /**
      * Injects the JS into the student's view page using PSR-14 hooks.
+     *
+     * @param before_standard_top_of_body_html_generation $hook
      */
     public static function before_standard_top_of_body_html_generation(before_standard_top_of_body_html_generation $hook) {
         global $PAGE, $DB;

@@ -3,10 +3,10 @@
  *
  * @module local_h5pchapter/deeplink
  */
-define(['jquery'], function ($) {
+define(['jquery'], function($) {
     return {
         // Parent window code (Layer 0)
-        initParent: function (params) {
+        initParent: function(params) {
             window.addEventListener('message', function(event) {
                 if (event.data && event.data.app === 'h5pchapter' && event.data.action === 'ready') {
                     event.source.postMessage({
@@ -20,7 +20,7 @@ define(['jquery'], function ($) {
         },
 
         // Code running inside the embed iframe (Layer 1)
-        initIframe: function () {
+        initIframe: function() {
             window.parent.postMessage({
                 app: 'h5pchapter',
                 action: 'ready'
