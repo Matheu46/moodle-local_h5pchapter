@@ -28,4 +28,4 @@ $plugin->component = 'local_h5pchapter';
 $plugin->version = 2026072701;
 $plugin->requires = 2024100710; // Moodle 4.5 or later.
 $plugin->maturity = MATURITY_BETA;
-$plugin->release = 'v1.0.0';
+$plugin->release = '1.0.0';
