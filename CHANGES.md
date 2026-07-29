@@ -2,7 +2,7 @@
 
 All notable changes to the **H5P Chapter Controller** (`local_h5pchapter`) plugin will be documented in this file.
 
-## [1.0.0] - 2026-07-27
+## [1.0.0] - 2026-07-29
 
 ### Added
 - Initial release of the plugin.

@@ -28,3 +28,4 @@ $string['chapter_target'] = 'Target Chapter';
 $string['chapter_target_help'] = 'Specify the chapter number(s) you want to unlock automatically. You can specify multiple chapters separated by commas (e.g., 1, 3, 4).';
 $string['block_navigation'] = 'Block navigation';
 $string['block_navigation_help'] = 'If enabled, the side menu and navigation arrows will be hidden, preventing the student from accessing other chapters.';
+$string['privacy:metadata'] = 'The H5P Chapter Controller plugin does not store any personal data.';
