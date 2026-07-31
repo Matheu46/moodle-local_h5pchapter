@@ -22,15 +22,12 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Provides the steps to restore H5P Chapter plugin data.
  *
  * @package    local_h5pchapter
  */
 class restore_local_h5pchapter_plugin extends restore_local_plugin {
-
     /** @var array Temporary storage for module settings during XML reading. */
     protected $moduleconfigs = [];
 
@@ -63,7 +60,7 @@ class restore_local_h5pchapter_plugin extends restore_local_plugin {
      */
     public function after_restore_course() {
         global $DB;
-        
+
         if (empty($this->moduleconfigs)) {
             return;
         }
@@ -85,7 +82,7 @@ class restore_local_h5pchapter_plugin extends restore_local_plugin {
                 $newrecord->timecreated = isset($setting->timecreated) ? $setting->timecreated : time();
                 $newrecord->timemodified = isset($setting->timemodified) ? $setting->timemodified : time();
 
-                // Check if already exists just in case
+                // Check if already exists just in case.
                 $existing = $DB->get_record('local_h5pchapter_settings', ['cmid' => $newcmid]);
                 if (!$existing) {
                     $DB->insert_record('local_h5pchapter_settings', $newrecord);

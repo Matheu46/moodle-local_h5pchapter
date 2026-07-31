@@ -22,8 +22,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Provides the steps to backup H5P Chapter plugin data.
  *
@@ -38,7 +36,7 @@ class backup_local_h5pchapter_plugin extends backup_local_plugin {
      */
     protected function define_course_plugin_structure(): backup_nested_element {
         global $DB;
-        
+
         $plugin = $this->get_plugin_element(null);
 
         // Use the recommended plugin wrapper to encapsulate all plugin data.
@@ -49,18 +47,22 @@ class backup_local_h5pchapter_plugin extends backup_local_plugin {
         $modulesnode = new backup_nested_element('h5pchapter_settings');
         $pluginwrapper->add_child($modulesnode);
 
-        $modulenode = new backup_nested_element('h5pchapter_setting', ['id'], ['cmid', 'chapter_target', 'block_navigation', 'timecreated', 'timemodified']);
+        $modulenode = new backup_nested_element(
+            'h5pchapter_setting',
+            ['id'],
+            ['cmid', 'chapter_target', 'block_navigation', 'timecreated', 'timemodified']
+        );
         $modulesnode->add_child($modulenode);
 
         $courseid = $this->step->get_task()->get_courseid();
 
         // Get all settings for this course's modules.
-        $sql = "SELECT hs.* 
+        $sql = "SELECT hs.*
                   FROM {local_h5pchapter_settings} hs
                   JOIN {course_modules} cm ON cm.id = hs.cmid
                  WHERE cm.course = ?";
         $records = $DB->get_records_sql($sql, [$courseid]);
-        
+
         $modulesdata = [];
         if ($records) {
             foreach ($records as $record) {
