@@ -1,6 +1,19 @@
 # Changelog
 
-All notable changes to the **H5P Chapter Controller** (`local_h5pchapter`) plugin will be documented in this file.
+All notable changes to the **H5P Page Controller** (`local_h5pchapter`) plugin will be documented in this file.
+
+## [1.1.1] - 2026-08-10
+
+### Added
+- Added helper test cases and observer tests to verify course module deletion.
+- Added `.gitignore` file.
+
+### Changed
+- Updated terminology from "Chapter" to "Page" across the plugin language strings and README to match Moodle's native H5P integration.
+- Updated database images and PHP versions in CI configuration.
+
+### Fixed
+- Cleaned up unused event callbacks.
 
 ## [1.1.0] - 2026-07-31
 
