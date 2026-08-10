@@ -22,10 +22,10 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'H5P Chapter Controller';
-$string['h5pchapter_control'] = 'H5P Chapter Control';
-$string['chapter_target'] = 'Target Chapter';
-$string['chapter_target_help'] = 'Specify the chapter number(s) you want to unlock automatically. You can specify multiple chapters separated by commas (e.g., 1, 3, 4).';
+$string['pluginname'] = 'H5P Page Controller';
+$string['h5pchapter_control'] = 'H5P Page Control';
+$string['chapter_target'] = 'Target Page';
+$string['chapter_target_help'] = 'Specify the page number(s) you want to unlock automatically. You can specify multiple pages separated by commas (e.g., 1, 3, 4).';
 $string['block_navigation'] = 'Block navigation';
-$string['block_navigation_help'] = 'If enabled, the side menu and navigation arrows will be hidden, preventing the student from accessing other chapters.';
-$string['privacy:metadata'] = 'The H5P Chapter Controller plugin does not store any personal data.';
+$string['block_navigation_help'] = 'If enabled, the side menu and navigation arrows will be hidden, preventing the student from accessing other pages.';
+$string['privacy:metadata'] = 'The H5P Page Controller plugin does not store any personal data.';
