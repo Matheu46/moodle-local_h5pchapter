@@ -27,7 +27,6 @@ namespace local_h5pchapter;
  * @covers \local_h5pchapter\helper
  */
 class helper_test extends \advanced_testcase {
-
     /**
      * Test the is_interactive_book_json method with various json formats.
      */
@@ -36,29 +35,29 @@ class helper_test extends \advanced_testcase {
 
         // Scenario 1: Valid JSON with mainLibrary as a simple string.
         $json = json_encode([
-            'mainLibrary' => 'H5P.InteractiveBook'
+            'mainLibrary' => 'H5P.InteractiveBook',
         ]);
         $this->assertTrue(helper::is_interactive_book_json($json), 'Should return true for mainLibrary string match.');
 
         // Scenario 2: Valid JSON with mainLibrary as an array containing machineName.
         $json = json_encode([
             'mainLibrary' => [
-                'machineName' => 'H5P.InteractiveBook'
-            ]
+                'machineName' => 'H5P.InteractiveBook',
+            ],
         ]);
         $this->assertTrue(helper::is_interactive_book_json($json), 'Should return true for mainLibrary array machineName match.');
 
         // Scenario 3: Valid JSON with mainLibrary as an array containing name.
         $json = json_encode([
             'mainLibrary' => [
-                'name' => 'H5P.InteractiveBook'
-            ]
+                'name' => 'H5P.InteractiveBook',
+            ],
         ]);
         $this->assertTrue(helper::is_interactive_book_json($json), 'Should return true for mainLibrary array name match.');
 
         // Scenario 4: Valid JSON, but not an Interactive Book.
         $json = json_encode([
-            'mainLibrary' => 'H5P.Quiz'
+            'mainLibrary' => 'H5P.Quiz',
         ]);
         $this->assertFalse(helper::is_interactive_book_json($json), 'Should return false for non-Interactive Book libraries.');
 
@@ -66,16 +65,16 @@ class helper_test extends \advanced_testcase {
         $json = json_encode([
             'preloadedDependencies' => [
                 ['machineName' => 'H5P.Quiz'],
-                ['machineName' => 'H5P.InteractiveBook']
-            ]
+                ['machineName' => 'H5P.InteractiveBook'],
+            ],
         ]);
         $this->assertTrue(helper::is_interactive_book_json($json), 'Should return true if found in preloadedDependencies array.');
 
         // Scenario 6: Preloaded dependency as a string (fallback).
         $json = json_encode([
             'preloadedDependencies' => [
-                'H5P.InteractiveBook'
-            ]
+                'H5P.InteractiveBook',
+            ],
         ]);
         $this->assertTrue(helper::is_interactive_book_json($json), 'Should return true if found in preloadedDependencies strings.');
 
@@ -84,7 +83,10 @@ class helper_test extends \advanced_testcase {
 
         // Scenario 8: Empty JSON object or missing library data.
         $this->assertFalse(helper::is_interactive_book_json('{}'), 'Should return false for empty JSON object.');
-        $this->assertFalse(helper::is_interactive_book_json('{"otherProp": true}'), 'Should return false for JSON missing library info.');
+        $this->assertFalse(
+            helper::is_interactive_book_json('{"otherProp": true}'),
+            'Should return false for JSON missing library info.'
+        );
     }
 
     /**
