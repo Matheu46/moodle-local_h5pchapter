@@ -26,11 +26,11 @@ namespace local_h5pchapter;
  *
  * @covers \local_h5pchapter\observer
  */
-class observer_test extends \advanced_testcase {
+final class observer_test extends \advanced_testcase {
     /**
      * Test course_module_deleted event cleans up the local_h5pchapter_settings table.
      */
-    public function test_course_module_deleted() {
+    public function test_course_module_deleted(): void {
         global $DB, $CFG;
         require_once($CFG->dirroot . '/course/lib.php');
 
@@ -66,8 +66,12 @@ class observer_test extends \advanced_testcase {
 
         // 4. Delete the course module to trigger the core\event\course_module_deleted event.
         // Our observer should catch this and delete the settings.
-        $cmactions = new \core_courseformat\local\cmactions($course);
-        $cmactions->delete($cmid);
+        if (class_exists('\core_courseformat\local\cmactions') && method_exists('\core_courseformat\local\cmactions', 'delete')) {
+            $cmactions = new \core_courseformat\local\cmactions($course);
+            $cmactions->delete($cmid);
+        } else {
+            course_delete_module($cmid);
+        }
 
         // 5. Verify the record was successfully deleted.
         $this->assertFalse(

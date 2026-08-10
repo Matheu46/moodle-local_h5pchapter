@@ -26,11 +26,11 @@ namespace local_h5pchapter;
  *
  * @covers \local_h5pchapter\helper
  */
-class helper_test extends \advanced_testcase {
+final class helper_test extends \advanced_testcase {
     /**
      * Test the is_interactive_book_json method with various json formats.
      */
-    public function test_is_interactive_book_json() {
+    public function test_is_interactive_book_json(): void {
         $this->resetAfterTest();
 
         // Scenario 1: Valid JSON with mainLibrary as a simple string.
@@ -92,7 +92,7 @@ class helper_test extends \advanced_testcase {
     /**
      * Test the is_interactive_book_form method with invalid inputs.
      */
-    public function test_is_interactive_book_form_invalid_inputs() {
+    public function test_is_interactive_book_form_invalid_inputs(): void {
         $this->resetAfterTest();
 
         // Null or non-object.
@@ -112,7 +112,7 @@ class helper_test extends \advanced_testcase {
     /**
      * Test the is_interactive_book_cm method with empty/invalid course module IDs.
      */
-    public function test_is_interactive_book_cm_invalid() {
+    public function test_is_interactive_book_cm_invalid(): void {
         $this->resetAfterTest();
 
         // Should return false for 0 or negative cmid.
